@@ -1,0 +1,62 @@
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <title>Top Bait</title>
+  </head>
+  <body>
+    <nav>
+      <div class='logo'>
+      </div>
+      <div class='nav-links'>
+        <a href='#'>Contact us</a>
+        <a href='#'>Map</a>
+        <a href='#'>Twitter feed</a>
+      </div>
+    </nav>
+
+    <div class="map-ftr">
+      <div id="right-panel">
+        <!--<div id="inputs">
+          <pre>
+            var origin1 = {lat: 55.930, lng: -3.118};
+            var origin2 = 'Greenwich, England';
+            var destinationA = 'Stockholm, Sweden';
+            var destinationB = {lat: 50.087, lng: 14.421};
+          </pre>
+        </div>-->
+        <div>
+          <strong>Results</strong>
+        </div>
+        <div id="output"></div>
+      </div>
+      <div id="map"></div>
+    </div>
+    <div id="textDiv">
+    </div>
+    <ul id="list">
+      
+    </ul>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="scripts/map.js"></script>
+    <script src="scripts/food-rating.js"></script>
+    <script async="" defer="" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBuTaWX0J2LZcNTAmFrnZPmJdDd5wWKIpg&amp;callback=initMap"></script>
+    <!--<script type="text/javascript">
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "http://ratings.food.gov.uk/search/cafe/newcastle/json", true);
+      xhr.onreadystatechange = function () {
+        if ((xhr.readyState==4) && (xhr.status = 200)) {
+          var ob = JSON.parse(xhr.responseText);
+          var str = "name="+ob.name+" id="+ob.id+" average="+ob.average;
+          var node = document.getElementById("result");
+          node.innerHTML = str;
+        }
+      };
+      xhr.send();
+    </script>-->
+  </body>
+</html>

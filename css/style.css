@@ -1,0 +1,85 @@
+/*
+#dddfd4
+#fae596
+#3fb0ac
+#173e43
+*/
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #dddfd4;
+  font-family: Lato;
+}
+
+nav {
+  float: left;
+  width: 100%;
+  height: 50px;
+  -webkit-box-shadow: 3px 3px 4px 2px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    3px 3px 4px 2px #ccc;
+  box-shadow: 3px 3px 4px 2px #ccc;
+  background-color: #3FB0AC;
+}
+
+nav .logo {
+  float: left;
+  height: 30px;
+  margin: 10px 20px;
+  width: 100px;
+}
+
+nav .nav-links {
+  float: right;
+  width: 500px;
+  height: 30px;
+  margin: 10px 20px;
+}
+
+nav .nav-links a {
+  float: right;
+  text-align: right;
+  display: inline-block;
+  padding-right: 20px;
+  line-height: 25px;
+  color: #FDFDFD;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.map-ftr {
+  height: 500px;
+  float: left;
+  width: 70%;
+  margin: 0 15%;
+}
+
+#right-panel {
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#right-panel select, #right-panel input {
+  font-size: 15px;
+}
+
+#right-panel select {
+  width: 100%;
+}
+
+#right-panel i {
+  font-size: 12px;
+}
+
+#map {
+  height: 100%;
+  width: 50%;
+}
+#right-panel {
+  float: right;
+  width: 48%;
+  padding-left: 2%;
+}
+#output {
+  font-size: 11px;
+}
