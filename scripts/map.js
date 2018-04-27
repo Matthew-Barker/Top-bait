@@ -205,6 +205,19 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
     infoWindow.open(mapObj);
 }
 
+function userInput() {
+    address1 = $("#address1").val;
+    address2 = $("#address2").val;
+    postcode = $("#postcode").val;
+
+    if ((address1 == null) && (address2 == null) && (postcode == null)) {
+        clickAddress = address1 + address2 + postcode;
+        console.log(clickAddress);
+    } else {
+        //return error message
+    }
+}
+
     //------------- Distance matrix-------------------\\
 
 function getRoute(latlng, directionsService, directionsDisplay, name) {
@@ -221,15 +234,15 @@ function getRoute(latlng, directionsService, directionsDisplay, name) {
 
             directionsDisplay.setDirections(response);
             var route = response.routes[0];
-            var summaryPanel = document.getElementById('output');
+            var summaryPanel = document.getElementById('routeInfo');
             summaryPanel.innerHTML = '';
 
             // For each route, display summary information.
             for (var o = 0; o < route.legs.length; o++) {
-            summaryPanel.innerHTML += '<b>Address of - ' + name + '</b><br>';
-            summaryPanel.innerHTML += route.legs[o].start_address + ' to ';
-            summaryPanel.innerHTML += route.legs[o].end_address + '<br>';
-            summaryPanel.innerHTML += route.legs[o].distance.text + '<br><br>';
+            summaryPanel.innerHTML += '<b>Address of - ' + name + '</b><br/>';
+            summaryPanel.innerHTML += '<p>From: ' + route.legs[o].start_address + '</p>';
+            summaryPanel.innerHTML += '<p>To: ' + route.legs[o].end_address + '</p>';
+            summaryPanel.innerHTML += '<p>Distance from location: ' + route.legs[o].distance.text + '</p>';
             }
         } else {
             alert('Error was: ' + status);

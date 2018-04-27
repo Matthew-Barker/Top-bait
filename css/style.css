@@ -92,7 +92,7 @@ nav .nav-links a:hover {
 .location-input input {
   float: left;
   background-color: transparent;
-  color: #36b961;
+  color: #fff;
   font-weight: bold;
   padding: 2px;
   border-top: none;
@@ -104,4 +104,23 @@ nav .nav-links a:hover {
 .location-input input:focus {
   border-color:#36b961;
   outline: none;
+}
+
+.location-submit {
+  width: 20%;
+  margin: 10px auto;
+}
+
+.location-submit input[type="submit"] {
+  background-color: #36b961;
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+  font-weight: bold;
+  width: 100px;
+  height: 27px;
+}
+
+#routeInfo p {
+  margin: 0;
 }
