@@ -68,13 +68,4 @@ $(document).ready(function(){
           dump("currently the application is at" + invocation.readyState);
   }
 
-  /*$.getJSON("http://ratings.food.gov.uk/search/cafe/newcastle/json", function(result){
-    $.each(result.EstablishmentCollection.EstablishmentDetail, function(obj){
-      alert(obj);
-      $.each(obj.row, function(key, value){
-        alert(key +" "+ value);
-      });
-    });
-	})*/
-
 })

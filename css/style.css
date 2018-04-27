@@ -3,83 +3,78 @@
 #fae596
 #3fb0ac
 #173e43
+#FDFDFD
 */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #dddfd4;
-  font-family: Lato;
+  background-color: #9fa0a1;
+  font-family: 'Open Sans', sans-serif;
 }
 
 nav {
   float: left;
   width: 100%;
-  height: 50px;
-  -webkit-box-shadow: 3px 3px 4px 2px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    3px 3px 4px 2px #ccc;
-  box-shadow: 3px 3px 4px 2px #ccc;
-  background-color: #3FB0AC;
+  -webkit-box-shadow: 0 1px 5px 0 #596062;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    0 1px 5px 0 #596062;
+  box-shadow: 0 1px 5px 0 #596062;
+  background-color: #0b0d14;
 }
 
-nav .logo {
+nav h1 {
   float: left;
-  height: 30px;
-  margin: 10px 20px;
-  width: 100px;
+  margin: 10px 40px;
+  color: #f4f4f4;
+  font-weight: bolder;
+  font-size: 20px;
 }
 
 nav .nav-links {
   float: right;
-  width: 500px;
-  height: 30px;
-  margin: 10px 20px;
+  margin: 13px 40px;
 }
 
 nav .nav-links a {
   float: right;
-  text-align: right;
-  display: inline-block;
   padding-right: 20px;
-  line-height: 25px;
-  color: #FDFDFD;
-  font-weight: bold;
+  color: #f4f4f4;
   text-decoration: none;
+  font-size: 15px;
+}
+
+nav .nav-links a:hover {
+  color: #36b961;
 }
 
 .map-ftr {
   height: 500px;
   float: left;
-  width: 70%;
-  margin: 0 15%;
-}
-
-#right-panel {
-  line-height: 30px;
-  padding-left: 10px;
-}
-
-#right-panel select, #right-panel input {
-  font-size: 15px;
-}
-
-#right-panel select {
-  width: 100%;
-}
-
-#right-panel i {
-  font-size: 12px;
+  width: 90%;
+  margin: 30px 5%;
+  border-radius: 3px;
+  -webkit-box-shadow: 2px 3px 5px 0 #596062;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    2px 3px 5px 0 #596062;
+  box-shadow: 2px 3px 5px 0 #596062;
+  background-color: #0b0d14;
 }
 
 #map {
   height: 100%;
-  width: 50%;
+  width: 49%;
+  float: left;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 #right-panel {
-  float: right;
-  width: 48%;
-  padding-left: 2%;
+  float: left;
+  width: 49%;
+  height: 100%;
+  line-height: 30px;
+  color: #f4f4f4;
 }
-#output {
-  font-size: 11px;
+
+.panel-content {
+  margin: 20px;
 }
+
