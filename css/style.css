@@ -119,6 +119,7 @@ nav .nav-links a:hover {
   font-weight: bold;
   width: 100px;
   height: 27px;
+  outline: none;
 }
 
 #routeInfo p {

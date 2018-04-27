@@ -206,25 +206,43 @@ function handleLocationError(browserHasGeolocation, infoWindow) {
 }
 
 function userInput() {
-    address1 = $("#address1").val;
-    address2 = $("#address2").val;
-    postcode = $("#postcode").val;
+    var geocoder = new google.maps.Geocoder();
+    address1 = $("#address1").val();
+    address2 = $("#address2").val();
+    postcode = $("#postcode").val();
+    error = document.getElementById("address-error");
+    error.innerHTML = "";
 
-    if ((address1 == null) && (address2 == null) && (postcode == null)) {
-        clickAddress = address1 + address2 + postcode;
-        console.log(clickAddress);
+    if ((address1 !== "") && (address2 !== "") && (postcode !== "")) {
+        clickAddress = address1 + ', ' + address2 + ' ' + postcode + ', UK';
+        document.getElementById("click-address").innerHTML = '<p>'+ clickAddress +'</p>';
+
+        geocoder.geocode({'address': clickAddress}, function(results, status) {
+            if (status === 'OK') {
+              mapObj.setCenter(results[0].geometry.location);
+              var marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: mapObj,
+                animation: google.maps.Animation.DROP,
+                icon: 'images/user-pin.png'
+              });
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
     } else {
         //return error message
+        error.innerHTML = "<p>Please enter an address into all the boxes</p>";
+        return false;
     }
 }
 
-    //------------- Distance matrix-------------------\\
-
 function getRoute(latlng, directionsService, directionsDisplay, name) {
-
+    //------------- Distance matrix-------------------\\
+    userOrigin = $("#click-address").innerHTML;
     directionsService.route(
         {
-            origin: clickLatlng,
+            origin: userOrigin,
             destination: latlng,
             travelMode: 'WALKING',
             unitSystem: google.maps.UnitSystem.METRIC,

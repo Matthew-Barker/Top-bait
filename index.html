@@ -30,19 +30,20 @@
             <div id="input-address">
               <div class="location-input">
                 <label for="address1">Address line 1</label>
-                <input type="text" id="address1" name="address1" placeholder="26 Example Lane"/>
+                <input type="text" id="address1" name="address1" placeholder="26 Example Lane" value="18 Foundry Court"/>
               </div>
               <div class="location-input">
                 <label for="address2">Address line 2</label>
-                <input type="text" id="address2" name="address2" placeholder="Newcastle Upon Type"/>
+                <input type="text" id="address2" name="address2" placeholder="Newcastle Upon Type" value="Newcastle Upon Tyne" />
               </div>
               <div class="location-input">
                 <label for="postcode">Postcode</label>
-                <input type="text" id="postcode" name="postcode" placeholder="NE6 5HU"/>
+                <input type="text" id="postcode" name="postcode" placeholder="NE6 5HU" value="NE6 1UG"/>
               </div>
               <div class="location-submit">
                 <input type="submit" onclick="userInput()"/>
               </div>
+              <span id="address-error"></span>
             </div>
           </div>
           <div id="routeInfo">
