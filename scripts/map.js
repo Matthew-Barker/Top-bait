@@ -1,35 +1,66 @@
-var marker, infoWindow, google;
+var mapObj, pos, clickAddress, clickLatlng;
 
 function initMap() {
 
-    map = new google.maps.Map(document.getElementById('map'), {
+    var directionsService = new google.maps.DirectionsService;
+    var directionsDisplay = new google.maps.DirectionsRenderer;
+    var geocoder = new google.maps.Geocoder();
+
+    mapObj = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         center: new google.maps.LatLng(54.973845, -1.613166),
         mapTypeId: 'roadmap',
         fullscreenControl: false,
         streetViewControl: false
     });
-    Geoloc();
+    directionsDisplay.setMap(mapObj);
+
+    if (navigator.geolocation) {
+        geoLoc();
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, mapObj.getCenter());
+    }
+
+    google.maps.event.addListener(mapObj, 'click', function(event) {
+        clickLatlng = event.latLng;
+        geocoder.geocode({
+          'latLng': event.latLng
+        }, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            if (results[0]) {
+                clickAddress = results[0].formatted_address;
+                document.getElementById("click-address").innerHTML = '<p>'+ clickAddress +'</p>';
+
+                var marker = new google.maps.Marker({
+                    position: clickLatlng,
+                    map: mapObj,
+                    animation: google.maps.Animation.DROP,
+                    icon: 'images/user-pin.png'
+                });
+            }
+          }
+        });
+    });
 
     LoadJSON(function (data) {
-        sortJSON(map, data)
+        sortJSON(mapObj, data, directionsService, directionsDisplay)
     });
 }
 
 function LoadJSON(callback) {
-    var items = [];
     $.getJSON("scripts/FHRS_json.json", function (data) {
         callback(data);
     });
 
 }
 
-function sortJSON (map, data) {
+function sortJSON (mapObj, data, directionsService, directionsDisplay) {
 
     var list = data.FHRSEstablishment.EstablishmentCollection.EstablishmentDetail;
     var latlng = [];
 
-    for (var x = 0; x<25; x++){
+    for (var x = 0; x<60; x++){
         if (list[x].RatingValue == 1) {
             var name = list[x].BusinessName;
             var addressLine1 = list[x].AddressLine1;
@@ -43,140 +74,165 @@ function sortJSON (map, data) {
                     list[x].Longitude);
                 });
             }
-
             var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
 
-            addMarkers(map, address, name, rating, latlng);
+            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
+        } else if (list[x].RatingValue == 2) {
+            var name = list[x].BusinessName;
+            var addressLine1 = list[x].AddressLine1;
+            var addressLine2 = list[x].AddressLine2;
+            var postcode = list[x].PostCode;
+            var rating = list[x].RatingValue;
+    
+            if (list[x].Geocode) {
+                $.each(list[x].Geocode, function(data){
+                    latlng = new google.maps.LatLng(list[x].Latitude,
+                    list[x].Longitude);
+                });
+            }
+            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+
+            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
+        } else if (list[x].RatingValue == 3) {
+            var name = list[x].BusinessName;
+            var addressLine1 = list[x].AddressLine1;
+            var addressLine2 = list[x].AddressLine2;
+            var postcode = list[x].PostCode;
+            var rating = list[x].RatingValue;
+    
+            if (list[x].Geocode) {
+                $.each(list[x].Geocode, function(data){
+                    latlng = new google.maps.LatLng(list[x].Latitude,
+                    list[x].Longitude);
+                });
+            }
+            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+
+            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
+        } else if (list[x].RatingValue == 4) {
+            var name = list[x].BusinessName;
+            var addressLine1 = list[x].AddressLine1;
+            var addressLine2 = list[x].AddressLine2;
+            var postcode = list[x].PostCode;
+            var rating = list[x].RatingValue;
+    
+            if (list[x].Geocode) {
+                $.each(list[x].Geocode, function(data){
+                    latlng = new google.maps.LatLng(list[x].Latitude,
+                    list[x].Longitude);
+                });
+            }
+            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+
+            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
+        } else if (list[x].RatingValue == 5) {
+            var name = list[x].BusinessName;
+            var addressLine1 = list[x].AddressLine1;
+            var addressLine2 = list[x].AddressLine2;
+            var postcode = list[x].PostCode;
+            var rating = list[x].RatingValue;
+    
+            if (list[x].Geocode) {
+                latlng = new google.maps.LatLng(list[x].Geocode.Latitude,
+                list[x].Geocode.Longitude);
+            }
+            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+
+            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
         }
     }
 }
 
-function addMarkers (map, address, name, rating, latlng) {
-            
-    marker = new google.map.Marker({
-        map: map,
+function addMarkers (mapObj, address, name, rating, latlng, directionsService, directionsDisplay) {
+       
+    var marker = new google.maps.Marker({
+        map: mapObj,
         position: latlng,
         animation: google.maps.Animation.DROP,
-        icon: 'images/user-pin.png'
     });
 
-    var infoWindow = new google.map.InfoWindow();
+    var infoWindow = new google.maps.InfoWindow();
     marker.addListener('mouseover', function() {
         infoWindow.setContent(name + ' ' + address + ' ' + rating);
-        infoWindow.open(map, this);
+        infoWindow.open(mapObj, this);
     });
 
-    marker.addListener('mouseover', function() {
+    marker.addListener('mouseout', function() {
         infoWindow.setContent(" ");
         infoWindow.close();
     });
+
+    marker.addListener('click', function() {
+        getRoute(latlng, directionsService, directionsDisplay, name);
+    })
+
 }
 
-function Geoloc() {
-    infoWindow = new google.maps.InfoWindow;
+function geoLoc() {
     
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
+    navigator.geolocation.getCurrentPosition(function(position) {
+        pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
 
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(pos.lat, pos.lng),
-                map: map,
-                animation: google.maps.Animation.DROP,
-                icon: 'images/user-pin.png'
-
-            });
-
-            /* click event to view event page for marker */
-            google.maps.event.addListener(marker, "click", () => {
-                infoWindow.setPosition(pos);
-                infoWindow.setContent('Your location');
-                infoWindow.open(map);
-            });
-
-          map.setCenter(pos);
-          map.setZoom(13);
-        }, function() {
-          handleLocationError(true, infoWindow, map.getCenter());
+        var marker = new google.maps.Marker({
+            position: pos,
+            map: mapObj,
+            animation: google.maps.Animation.DROP,
+            icon: 'images/user-pin.png'
         });
-      } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-      }
+
+        /* click event to view event page for marker */
+        google.maps.event.addListener(marker, "click", () => {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Your location');
+            infoWindow.open(mapObj);
+        });
+
+        mapObj.setCenter(pos);
+        mapObj.setZoom(13);
+    }, function() {
+        handleLocationError(true, infoWindow, mapObj.getCenter());
+    });
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+function handleLocationError(browserHasGeolocation, infoWindow) {
     infoWindow.setPosition(pos);
     infoWindow.setContent(browserHasGeolocation ?
                             'Error: The Geolocation service failed.' :
                             'Error: Your browser doesn\'t support geolocation.');
-    infoWindow.open(map);
+    infoWindow.open(mapObj);
 }
 
     //------------- Distance matrix-------------------\\
 
-function distanceMatrix() {
-    var markersArray = []
-    var geocoder = new google.maps.Geocoder;
-    var bounds = new google.maps.LatLngBounds;
-    var service = new google.maps.DistanceMatrixService();
+function getRoute(latlng, directionsService, directionsDisplay, name) {
 
-    service.getDistanceMatrix(
-    {
-        origins: [origin1],
-        destinations: [destinationA],
-        travelMode: 'WALKING',
-        unitSystem: google.maps.UnitSystem.METRIC,
-        provideRouteAlternatives: true,
-        optimizeWaypoints: true
-    }, function(response, status) {
-    if (status !== 'OK') {
-        alert('Error was: ' + status);
-    } else {
-        var originList = response.originAddresses;
-        var destinationList = response.destinationAddresses;
-        var outputDiv = document.getElementById('output');
-        outputDiv.innerHTML = '';
-        deleteMarkers(markersArray);
+    directionsService.route(
+        {
+            origin: clickLatlng,
+            destination: latlng,
+            travelMode: 'WALKING',
+            unitSystem: google.maps.UnitSystem.METRIC,
+            optimizeWaypoints: true
+        }, function(response, status) {
+        if (status === 'OK') {
 
-        var showGeocodedAddressOnMap = function(asDestination) {
-        var icon = asDestination ? destinationIcon : originIcon;
-        return function(results, status) {
-            if (status === 'OK') {
-            map.fitBounds(bounds.extend(results[0].geometry.location));
-            markersArray.push(new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location,
-                icon: icon
-            }));
-            } else {
-            alert('Geocode was not successful due to: ' + status);
+            directionsDisplay.setDirections(response);
+            var route = response.routes[0];
+            var summaryPanel = document.getElementById('output');
+            summaryPanel.innerHTML = '';
+
+            // For each route, display summary information.
+            for (var o = 0; o < route.legs.length; o++) {
+            summaryPanel.innerHTML += '<b>Address of - ' + name + '</b><br>';
+            summaryPanel.innerHTML += route.legs[o].start_address + ' to ';
+            summaryPanel.innerHTML += route.legs[o].end_address + '<br>';
+            summaryPanel.innerHTML += route.legs[o].distance.text + '<br><br>';
             }
-        };
-        };
-
-        for (var i = 0; i < originList.length; i++) {
-        var results = response.rows[i].elements;
-            geocoder.geocode({'address': originList[i]},
-            showGeocodedAddressOnMap(false));
-            for (var j = 0; j < results.length; j++) {
-                geocoder.geocode({'address': destinationList[j]},
-                showGeocodedAddressOnMap(true));
-                outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
-                    ': ' + results[j].distance.text + ' in ' +
-                    results[j].duration.text + '<br>';
-            }
+        } else {
+            alert('Error was: ' + status);
         }
-        function deleteMarkers(markersArray) {
-            for (var i = 0; i < markersArray.length; i++) {
-                markersArray[i].setMap(null);
-            }
-            markersArray = [];
-        }
-        //add an eventlistener to the dom to call the initialize function when the window is loaded
-    }
     });
 }

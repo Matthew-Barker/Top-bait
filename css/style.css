@@ -78,3 +78,30 @@ nav .nav-links a:hover {
   margin: 20px;
 }
 
+.location-input {
+  display: inline-block;
+  width: 30%;
+  margin-right: 2%;
+}
+
+.location-input label {
+  float: left;
+  font-size: 16px;
+}
+
+.location-input input {
+  float: left;
+  background-color: transparent;
+  color: #36b961;
+  font-weight: bold;
+  padding: 2px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 4px soild #fff;
+}
+
+.location-input input:focus {
+  border-color:#36b961;
+  outline: none;
+}
