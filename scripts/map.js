@@ -1,9 +1,11 @@
-var mapObj, pos, clickAddress, clickLatlng;
+var mapObj, pos, clickAddress, clickLatlng, directionsService, directionsDisplay;
+var markerList = [];
+var rstMarker = [];
 
 function initMap() {
 
-    var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer;
+    directionsService = new google.maps.DirectionsService;
+    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
     var geocoder = new google.maps.Geocoder();
 
     mapObj = new google.maps.Map(document.getElementById('map'), {
@@ -16,7 +18,7 @@ function initMap() {
     directionsDisplay.setMap(mapObj);
 
     if (navigator.geolocation) {
-        geoLoc();
+        geoLoc(geocoder);
     } else {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, mapObj.getCenter());
@@ -29,6 +31,7 @@ function initMap() {
         }, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             if (results[0]) {
+                removeMarkers(markerList);
                 clickAddress = results[0].formatted_address;
                 document.getElementById("click-address").innerHTML = '<p>'+ clickAddress +'</p>';
 
@@ -38,6 +41,7 @@ function initMap() {
                     animation: google.maps.Animation.DROP,
                     icon: 'images/user-pin.png'
                 });
+                markerList.push(marker);
             }
           }
         });
@@ -59,116 +63,157 @@ function sortJSON (mapObj, data, directionsService, directionsDisplay) {
 
     var list = data.FHRSEstablishment.EstablishmentCollection.EstablishmentDetail;
     var latlng = [];
+    var oneCounter = twoCounter = threeCounter = fourCounter = fiveCounter = 0;
 
-    for (var x = 0; x<60; x++){
-        if (list[x].RatingValue == 1) {
-            var name = list[x].BusinessName;
-            var addressLine1 = list[x].AddressLine1;
-            var addressLine2 = list[x].AddressLine2;
-            var postcode = list[x].PostCode;
-            var rating = list[x].RatingValue;
-    
-            if (list[x].Geocode) {
-                $.each(list[x].Geocode, function(data){
-                    latlng = new google.maps.LatLng(list[x].Latitude,
-                    list[x].Longitude);
-                });
-            }
-            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+    for (var x = 0; x<2000; x++){
+        if ((list[x].RatingValue == 1) && (oneCounter < 6)) {
+            oneCounter++;
+            storeJSON(list[x]);
 
-            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
-        } else if (list[x].RatingValue == 2) {
-            var name = list[x].BusinessName;
-            var addressLine1 = list[x].AddressLine1;
-            var addressLine2 = list[x].AddressLine2;
-            var postcode = list[x].PostCode;
-            var rating = list[x].RatingValue;
-    
-            if (list[x].Geocode) {
-                $.each(list[x].Geocode, function(data){
-                    latlng = new google.maps.LatLng(list[x].Latitude,
-                    list[x].Longitude);
-                });
-            }
-            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+        } else if ((list[x].RatingValue == 2) && (twoCounter < 5)) {
+            twoCounter++;
+            storeJSON(list[x]);
 
-            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
-        } else if (list[x].RatingValue == 3) {
-            var name = list[x].BusinessName;
-            var addressLine1 = list[x].AddressLine1;
-            var addressLine2 = list[x].AddressLine2;
-            var postcode = list[x].PostCode;
-            var rating = list[x].RatingValue;
-    
-            if (list[x].Geocode) {
-                $.each(list[x].Geocode, function(data){
-                    latlng = new google.maps.LatLng(list[x].Latitude,
-                    list[x].Longitude);
-                });
-            }
-            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+        } else if ((list[x].RatingValue == 3) && (threeCounter < 5)) {
+            threeCounter++;
+            storeJSON(list[x]);
 
-            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
-        } else if (list[x].RatingValue == 4) {
-            var name = list[x].BusinessName;
-            var addressLine1 = list[x].AddressLine1;
-            var addressLine2 = list[x].AddressLine2;
-            var postcode = list[x].PostCode;
-            var rating = list[x].RatingValue;
-    
-            if (list[x].Geocode) {
-                $.each(list[x].Geocode, function(data){
-                    latlng = new google.maps.LatLng(list[x].Latitude,
-                    list[x].Longitude);
-                });
-            }
-            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
+        } else if ((list[x].RatingValue == 4) && (fourCounter < 5)) {
+            fourCounter++;
+            storeJSON(list[x]);
 
-            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
-        } else if (list[x].RatingValue == 5) {
-            var name = list[x].BusinessName;
-            var addressLine1 = list[x].AddressLine1;
-            var addressLine2 = list[x].AddressLine2;
-            var postcode = list[x].PostCode;
-            var rating = list[x].RatingValue;
-    
-            if (list[x].Geocode) {
-                latlng = new google.maps.LatLng(list[x].Geocode.Latitude,
-                list[x].Geocode.Longitude);
-            }
-            var address = addressLine1 + ' ' + addressLine2 + ' ' + postcode;
-
-            addMarkers(mapObj, address, name, rating, latlng, directionsService, directionsDisplay);
+        } else if ((list[x].RatingValue == 5) && (fiveCounter < 6)) {
+            fiveCounter++;
+            storeJSON(list[x]);
         }
     }
 }
 
-function addMarkers (mapObj, address, name, rating, latlng, directionsService, directionsDisplay) {
-       
-    var marker = new google.maps.Marker({
-        map: mapObj,
-        position: latlng,
-        animation: google.maps.Animation.DROP,
-    });
+function storeJSON (data) {
 
-    var infoWindow = new google.maps.InfoWindow();
-    marker.addListener('mouseover', function() {
-        infoWindow.setContent(name + ' ' + address + ' ' + rating);
-        infoWindow.open(mapObj, this);
-    });
+    if (data.PostCode == rstMarker.PostCode) {
+        return 
+    } else {
+        console.log(data.RatingValue);
+        var tempHygiene, tempAdd, tempAdd2, tempName, tempPost;
+        if (data.Scores) {
+            if (data.Scores.Hygiene !== '') {
+                tempHygiene = data.Scores.Hygiene;
+            }
+        } else {
+            tempHygiene = 'N/A';
+        }
 
-    marker.addListener('mouseout', function() {
-        infoWindow.setContent(" ");
-        infoWindow.close();
-    });
+        if (data.BusinessName !== '') {
+            tempName = data.BusinessName;
+        } else {
+            tempName = 'N/A';
+        }
+
+        if (data.AddressLine1 !== '') {
+            tempAdd = data.AddressLine1;
+        } else {
+            tempAdd = 'N/A';
+        }
+
+        if (data.addressLine2 !== '') {
+            tempAdd2 = data.addressLine2;
+        } else {
+            tempAdd2 = '';
+        }
+
+        if (data.PostCode !== '') {
+            tempPost = data.PostCode;
+        } else {
+            tempPost = 'N/A';
+        }
+
+        if (data.Geocode !== "") {
+
+            var arrData = {
+                name : data.BusinessName,
+                addressLine1 : data.AddressLine1,
+                addressLine2 : data.AddressLine2,
+                postcode : data.PostCode,
+                rating : data.RatingValue,
+                hygiene : tempHygiene,
+                latlng : data.Geocode
+            }
+        } else {
+            var arrData = {
+                name : data.BusinessName,
+                addressLine1 : data.AddressLine1,
+                addressLine2 : data.AddressLine2,
+                postcode : data.PostCode,
+                rating : data.RatingValue,
+                hygiene : tempHygiene
+            }
+        }
+        addMarkers(arrData, directionsService, directionsDisplay);
+    }
+}
+
+function addMarkers (place, directionsService, directionsDisplay) {
+    
+    var geocoder = new google.maps.Geocoder();
+    var location;
+    var address = place.addressLine1 + ' ' + place.addressLine2 + ' ' + place.postcode;
+
+    if ((place.latlng)) {
+        var lat = place.latlng.Latitude;
+        var lng = place.latlng.Longitude;
+        location = new google.maps.LatLng(lat, lng);
+    } else {
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                location = results;
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+        var marker = new google.maps.Marker({
+            map: mapObj,
+            position: location,
+            animation: google.maps.Animation.DROP,
+            postcode: place.PostCode 
+        });
+        rstMarker.push(marker);
+        console.log(rstMarker.length);
+    // var infoWindow = new google.maps.InfoWindow();
+    // marker.addListener('mouseover', function() {
+    //     infoWindow.setContent('<b>' + place.name + '</b><p>' + place.address + '</p><p>Rating: ' + rating + '</p>');
+    //     infoWindow.open(mapObj, this);
+    // });
+
+    // marker.addListener('mouseout', function() {
+    //     infoWindow.setContent(" ");
+    //     infoWindow.close();
+    // });
 
     marker.addListener('click', function() {
-        getRoute(latlng, directionsService, directionsDisplay, name);
+        var summaryPanel = document.getElementById('routeInfo');
+        userOrigin = document.getElementById("click-address").innerHTML;
+        summaryPanel.innerHTML = '';
+        summaryPanel.innerHTML += '<b>' + place.name + '</b><br/>';
+        summaryPanel.innerHTML += '<p>' + address + '</p>';
+        summaryPanel.innerHTML += '<p>Overall rating: <b>' + place.rating + '/5 </b> Hygiene rating: <b>' + place.hygiene + '/15</b></p>';
+        
+        if (userOrigin !== '') {
+            getRoute(place, location, userOrigin, directionsService, directionsDisplay);
+        }
     })
 
 }
 
-function geoLoc() {
+function removeMarkers(marker){
+    for(i=0; i<marker.length; i++){
+        marker[i].setMap(null);
+    }
+}
+
+function geoLoc(geocoder) {
     
     navigator.geolocation.getCurrentPosition(function(position) {
         pos = {
@@ -183,12 +228,22 @@ function geoLoc() {
             icon: 'images/user-pin.png'
         });
 
-        /* click event to view event page for marker */
-        google.maps.event.addListener(marker, "click", () => {
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Your location');
-            infoWindow.open(mapObj);
-        });
+        geocoder.geocode({
+            'location': pos
+          }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    document.getElementById("click-address").innerHTML = '<p>'+ results[0].formatted_address +'</p>';
+              }
+            }
+          });
+
+        // /* click event to view event page for marker */
+        // google.maps.event.addListener(marker, "click", () => {
+        //     infoWindow.setPosition(pos);
+        //     infoWindow.setContent('Your location');
+        //     infoWindow.open(mapObj);
+        // });
 
         mapObj.setCenter(pos);
         mapObj.setZoom(13);
@@ -219,13 +274,15 @@ function userInput() {
 
         geocoder.geocode({'address': clickAddress}, function(results, status) {
             if (status === 'OK') {
-              mapObj.setCenter(results[0].geometry.location);
-              var marker = new google.maps.Marker({
-                position: results[0].geometry.location,
-                map: mapObj,
-                animation: google.maps.Animation.DROP,
-                icon: 'images/user-pin.png'
-              });
+                removeMarkers(markerList);
+                mapObj.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    position: results[0].geometry.location,
+                    map: mapObj,
+                    animation: google.maps.Animation.DROP,
+                    icon: 'images/user-pin.png'
+                });
+                markerList.push(marker);
             } else {
               alert('Geocode was not successful for the following reason: ' + status);
             }
@@ -237,9 +294,8 @@ function userInput() {
     }
 }
 
-function getRoute(latlng, directionsService, directionsDisplay, name) {
+function getRoute(place, latlng, userOrigin, directionsService, directionsDisplay) {
     //------------- Distance matrix-------------------\\
-    userOrigin = $("#click-address").innerHTML;
     directionsService.route(
         {
             origin: userOrigin,
@@ -257,13 +313,14 @@ function getRoute(latlng, directionsService, directionsDisplay, name) {
 
             // For each route, display summary information.
             for (var o = 0; o < route.legs.length; o++) {
-            summaryPanel.innerHTML += '<b>Address of - ' + name + '</b><br/>';
+            summaryPanel.innerHTML += '<b>Address of - ' + place.name + '</b><br/>';
             summaryPanel.innerHTML += '<p>From: ' + route.legs[o].start_address + '</p>';
             summaryPanel.innerHTML += '<p>To: ' + route.legs[o].end_address + '</p>';
-            summaryPanel.innerHTML += '<p>Distance from location: ' + route.legs[o].distance.text + '</p>';
+            summaryPanel.innerHTML += '<p>Distance from location: <b>' + route.legs[o].distance.text + '</b></p>';
+            summaryPanel.innerHTML += '<p>Overall rating: <b>' + place.rating + '/5 </b> Hygiene rating: <b>' + place.hygiene + '/15</b></p>';
             }
         } else {
-            alert('Error was: ' + status);
+            alert('Error was: ' + status + ' Make sure you have set your location');
         }
     });
 }

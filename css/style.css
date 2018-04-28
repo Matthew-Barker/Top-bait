@@ -24,7 +24,7 @@ nav {
 
 nav h1 {
   float: left;
-  margin: 10px 40px;
+  margin: 10px 5%;
   color: #f4f4f4;
   font-weight: bolder;
   font-size: 20px;
@@ -32,12 +32,12 @@ nav h1 {
 
 nav .nav-links {
   float: right;
-  margin: 13px 40px;
+  margin: 13px 5%;
 }
 
 nav .nav-links a {
   float: right;
-  padding-right: 20px;
+  padding-left: 20px;
   color: #f4f4f4;
   text-decoration: none;
   font-size: 15px;
@@ -68,7 +68,7 @@ nav .nav-links a:hover {
 }
 #right-panel {
   float: left;
-  width: 49%;
+  width: 51%;
   height: 100%;
   line-height: 30px;
   color: #f4f4f4;
@@ -78,15 +78,29 @@ nav .nav-links a:hover {
   margin: 20px;
 }
 
+h2 {
+  margin: 10px 0;
+}
+
+#input-address {
+  border-bottom: 1px solid #fff;
+  font-size: 14px;
+  float: left;
+  margin-bottom: 10px;
+}
+
 .location-input {
   display: inline-block;
-  width: 30%;
-  margin-right: 2%;
+  width: 31%;
+}
+
+.middle {
+  margin: 0 2%;
 }
 
 .location-input label {
   float: left;
-  font-size: 16px;
+  width: 100%;
 }
 
 .location-input input {
@@ -98,7 +112,8 @@ nav .nav-links a:hover {
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 4px soild #fff;
+  border-bottom: 1px solid #fff;
+  width: 100%;
 }
 
 .location-input input:focus {
@@ -106,9 +121,21 @@ nav .nav-links a:hover {
   outline: none;
 }
 
+.search{
+  float: left;
+  margin-top: 10px;
+  width: 70%;
+}
+
+.search input {
+  border: none;
+  font-size: 16px;
+}
+
 .location-submit {
   width: 20%;
-  margin: 10px auto;
+  float: right;
+  margin: 5px auto 15px auto;
 }
 
 .location-submit input[type="submit"] {
@@ -120,8 +147,9 @@ nav .nav-links a:hover {
   width: 100px;
   height: 27px;
   outline: none;
+  float: right;
 }
 
-#routeInfo p {
+#routeInfo p, #click-address p {
   margin: 0;
 }
