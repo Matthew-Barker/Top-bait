@@ -94,7 +94,6 @@ function storeJSON (data) {
     if (data.PostCode == rstMarker.PostCode) {
         return 
     } else {
-        console.log(data.RatingValue);
         var tempHygiene, tempAdd, tempAdd2, tempName, tempPost;
         if (data.Scores) {
             if (data.Scores.Hygiene !== '') {
@@ -173,38 +172,55 @@ function addMarkers (place, directionsService, directionsDisplay) {
         });
     }
 
-        var marker = new google.maps.Marker({
-            map: mapObj,
-            position: location,
-            animation: google.maps.Animation.DROP,
-            postcode: place.PostCode 
-        });
-        rstMarker.push(marker);
-        console.log(rstMarker.length);
-    // var infoWindow = new google.maps.InfoWindow();
-    // marker.addListener('mouseover', function() {
-    //     infoWindow.setContent('<b>' + place.name + '</b><p>' + place.address + '</p><p>Rating: ' + rating + '</p>');
-    //     infoWindow.open(mapObj, this);
-    // });
+    var marker = new google.maps.Marker({
+        map: mapObj,
+        position: location,
+        animation: google.maps.Animation.DROP,
+        postcode: place.PostCode 
+    });
+    rstMarker.push(marker);
+    var infoWindow = new google.maps.InfoWindow();
+    marker.addListener('mouseover', function() {
+        infoWindow.setContent("<div id='twitter'></div>");
+        infoWindow.open(mapObj, this);
+        searchTweets(place.name);
+    })
 
-    // marker.addListener('mouseout', function() {
-    //     infoWindow.setContent(" ");
-    //     infoWindow.close();
-    // });
+    infoWindow.addListener('mouseout', function() {
+        //infoWindow.setContent("");
+        infoWindow.close(mapObj, this);
+    })
 
     marker.addListener('click', function() {
+
         var summaryPanel = document.getElementById('routeInfo');
         userOrigin = document.getElementById("click-address").innerHTML;
         summaryPanel.innerHTML = '';
         summaryPanel.innerHTML += '<b>' + place.name + '</b><br/>';
         summaryPanel.innerHTML += '<p>' + address + '</p>';
         summaryPanel.innerHTML += '<p>Overall rating: <b>' + place.rating + '/5 </b> Hygiene rating: <b>' + place.hygiene + '/15</b></p>';
-        
+
         if (userOrigin !== '') {
             getRoute(place, location, userOrigin, directionsService, directionsDisplay);
-        }
+        } 
     })
 
+}
+
+function searchTweets(name){
+    //use ajax to posts the premises name to Twitter	
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        //get the response from test.php and append it to the results div element
+            $("#twitter").append(this.responseText);
+        }
+    };
+    //build the query string from the passed name variable
+    xmlhttp.open("GET", " twitter-search-functions.php?q=" + name, true);
+    //send the request which will handle the Twitter search functionality
+    xmlhttp.send();
+  
 }
 
 function removeMarkers(marker){
@@ -248,16 +264,8 @@ function geoLoc(geocoder) {
         mapObj.setCenter(pos);
         mapObj.setZoom(13);
     }, function() {
-        handleLocationError(true, infoWindow, mapObj.getCenter());
+        console.log('Geolocation is not supported');
     });
-}
-
-function handleLocationError(browserHasGeolocation, infoWindow) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-                            'Error: The Geolocation service failed.' :
-                            'Error: Your browser doesn\'t support geolocation.');
-    infoWindow.open(mapObj);
 }
 
 function userInput() {
