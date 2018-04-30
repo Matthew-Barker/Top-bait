@@ -1,4 +1,4 @@
-var mapObj, pos, clickAddress, clickLatlng, directionsService, directionsDisplay;
+var mapObj, pos, clickAddress, clickLatlng, lastInfoWindow, directionsService, directionsDisplay;
 var markerList = [];
 var rstMarker = [];
 
@@ -39,7 +39,7 @@ function initMap() {
                     position: clickLatlng,
                     map: mapObj,
                     animation: google.maps.Animation.DROP,
-                    icon: 'images/user-pin.png'
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
                 });
                 markerList.push(marker);
             }
@@ -66,25 +66,27 @@ function sortJSON (mapObj, data, directionsService, directionsDisplay) {
     var oneCounter = twoCounter = threeCounter = fourCounter = fiveCounter = 0;
 
     for (var x = 0; x<2000; x++){
-        if ((list[x].RatingValue == 1) && (oneCounter < 6)) {
-            oneCounter++;
-            storeJSON(list[x]);
+        if ((list[x].BusinessType == "Restaurant/Cafe/Canteen") || (list[x].BusinessType == "Takeaway/sandwich shop")
+        || (list[x].BusinessType == "Mobile caterer")) {
+            if ((list[x].RatingValue == 1) && (oneCounter < 6)) {
+                oneCounter++;
+                storeJSON(list[x]);
+            } else if ((list[x].RatingValue == 2) && (twoCounter < 5)) {
+                twoCounter++;
+                storeJSON(list[x]);
 
-        } else if ((list[x].RatingValue == 2) && (twoCounter < 5)) {
-            twoCounter++;
-            storeJSON(list[x]);
+            } else if ((list[x].RatingValue == 3) && (threeCounter < 5)) {
+                threeCounter++;
+                storeJSON(list[x]);
 
-        } else if ((list[x].RatingValue == 3) && (threeCounter < 5)) {
-            threeCounter++;
-            storeJSON(list[x]);
+            } else if ((list[x].RatingValue == 4) && (fourCounter < 5)) {
+                fourCounter++;
+                storeJSON(list[x]);
 
-        } else if ((list[x].RatingValue == 4) && (fourCounter < 5)) {
-            fourCounter++;
-            storeJSON(list[x]);
-
-        } else if ((list[x].RatingValue == 5) && (fiveCounter < 6)) {
-            fiveCounter++;
-            storeJSON(list[x]);
+            } else if ((list[x].RatingValue == 5) && (fiveCounter < 6)) {
+                fiveCounter++;
+                storeJSON(list[x]);
+            }
         }
     }
 }
@@ -181,13 +183,16 @@ function addMarkers (place, directionsService, directionsDisplay) {
     rstMarker.push(marker);
     var infoWindow = new google.maps.InfoWindow();
     marker.addListener('mouseover', function() {
+        if (lastInfoWindow){
+            lastInfoWindow.close();
+        }
         infoWindow.setContent("<div id='twitter'></div>");
-        infoWindow.open(mapObj, this);
         searchTweets(place.name);
+        infoWindow.open(mapObj, this);
+        lastInfoWindow = infoWindow;
     })
-
     infoWindow.addListener('mouseout', function() {
-        //infoWindow.setContent("");
+        infoWindow.setContent("");
         infoWindow.close(mapObj, this);
     })
 
@@ -212,7 +217,7 @@ function searchTweets(name){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-        //get the response from test.php and append it to the results div element
+            //get the response from test.php and append it to the results div element
             $("#twitter").append(this.responseText);
         }
     };
@@ -288,7 +293,7 @@ function userInput() {
                     position: results[0].geometry.location,
                     map: mapObj,
                     animation: google.maps.Animation.DROP,
-                    icon: 'images/user-pin.png'
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
                 });
                 markerList.push(marker);
             } else {
@@ -321,11 +326,11 @@ function getRoute(place, latlng, userOrigin, directionsService, directionsDispla
 
             // For each route, display summary information.
             for (var o = 0; o < route.legs.length; o++) {
-            summaryPanel.innerHTML += '<b>Address of - ' + place.name + '</b><br/>';
-            summaryPanel.innerHTML += '<p>From: ' + route.legs[o].start_address + '</p>';
-            summaryPanel.innerHTML += '<p>To: ' + route.legs[o].end_address + '</p>';
-            summaryPanel.innerHTML += '<p>Distance from location: <b>' + route.legs[o].distance.text + '</b></p>';
-            summaryPanel.innerHTML += '<p>Overall rating: <b>' + place.rating + '/5 </b> Hygiene rating: <b>' + place.hygiene + '/15</b></p>';
+                summaryPanel.innerHTML += '<b>Address of - ' + place.name + '</b><br/>';
+                summaryPanel.innerHTML += '<p>From: ' + route.legs[o].start_address + '</p>';
+                summaryPanel.innerHTML += '<p>To: ' + route.legs[o].end_address + '</p>';
+                summaryPanel.innerHTML += '<p>Distance: <b>' + route.legs[o].distance.text + '</b> - Time: <b>' + route.legs[0].duration.text + '</b></p>';
+                summaryPanel.innerHTML += '<p>Overall rating: <b>' + place.rating + '/5 </b> Hygiene rating: <b>' + place.hygiene + '/15</b></p>';
             }
         } else {
             alert('Error was: ' + status + ' Make sure you have set your location');

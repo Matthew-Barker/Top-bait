@@ -43,12 +43,6 @@ nav .nav-links a {
   font-size: 15px;
 }
 
-#twitter-sign-in {
-  background-image: url("../images/sign-in.png");
-  width: 50px;
-  height: 50px;
-}
-
 nav .nav-links a:hover {
   color: #36b961;
 }
@@ -82,10 +76,21 @@ nav .nav-links a:hover {
 
 .panel-content {
   margin: 20px;
+  float: left;
 }
 
 h2 {
-  margin: 10px 0;
+  margin: 0 0 10px 0;
+  width: 50%;
+  float: left;
+}
+
+#twitter-div {
+  float: right;
+}
+
+.user-location {
+  float: left;
 }
 
 #input-address {
@@ -158,4 +163,24 @@ h2 {
 
 #routeInfo p, #click-address p {
   margin: 0;
+}
+
+#address-error {
+  float: left;
+}
+
+#twitter {
+  height: 150px;
+  width: 400px;
+}
+
+#twitter h3 {
+  padding: 0 10px;
+  color: #1B95E0;
+}
+
+#twitter p {
+  padding: 10px;
+  border-bottom: 2px solid #1B95E0;
+  font-weight: bold;
 }
