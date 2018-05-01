@@ -15,9 +15,11 @@ $request_token['oauth_token_secret'] = $_SESSION['oauth_token_secret'];
 if ((isset($_REQUEST['oauth_token']) && 
     $request_token['oauth_token'] !== $_REQUEST['oauth_token']) || (empty($token)) ) {
   // oauth token is not found - link back to login to retry
-  header('Location: http://ec2-18-218-176-53.us-east-2.compute.amazonaws.com/CM0677/twitter_login.php');    
+  //header('Location: http://localhost/CM0677/twitter_login.php'); 
+  $twitter = "<a href='twitter_login.php'><img src='images/sign-in.png' alt='sign in with twitter'/></a>";   
 } else {
-
+  $twitter = "<a class='twitter-hashtag-button' href='https://twitter.com/intent/tweet?text=' data-size='large' data-text='#CM0677 Top Bait'>Tweet</a>";
+}
 // //Now we make a TwitterOAuth instance with the temporary request token.
 // $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token['oauth_token'], $request_token['oauth_token_secret']);
 
@@ -61,7 +63,7 @@ echo "
           <div class='panel-content'>
             <h2>Wayfinder</h2>
             <div id='twitter-div'>
-              <a class='twitter-hashtag-button' href='https://twitter.com/intent/tweet?text=' data-size='large' data-text='#CM0677 Top Bait'>Tweet</a>  
+              ". $twitter ."  
             </div>
             <div class='user-location'>
               <div id='click-address'></div>
@@ -74,7 +76,7 @@ echo "
                   <label for='address2'>Address line 2</label>
                   <input type='text' id='address2' name='address2' placeholder='Newcastle Upon Type' size='40'/>
                 </div>
-                <div class='location-input' style='float: right;'>
+                <div class='location-input' style='float: right; width: 20%;'>
                   <label for='postcode'>Postcode</label>
                   <input type='text' id='postcode' name='postcode' placeholder='NE6 5HU' size='8' required/>
                 </div>
@@ -98,5 +100,4 @@ echo "
     </body>
   </html>
   ";
-}
 ?>

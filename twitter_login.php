@@ -1,8 +1,4 @@
 <?php
-//These files are directly taken from https://twitteroauth.com/redirect.php
-// March 2015
-//
-// NB Calling header so avoid output
 require 'config.php';
 require 'twitteroauth/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;

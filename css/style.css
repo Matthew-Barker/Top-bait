@@ -102,7 +102,7 @@ h2 {
 
 .location-input {
   display: inline-block;
-  width: 31%;
+  width: 37%;
 }
 
 .middle {
@@ -165,7 +165,7 @@ h2 {
   margin: 0;
 }
 
-#address-error {
+#address-error, #routeInfo {
   float: left;
 }
 
